@@ -1,0 +1,1996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ilham Farizan — Full Stack Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #080D1A;
+    --surface: #111827;
+    --surface2: #1A2235;
+    --accent: #00D4AA;
+    --accent2: #0099FF;
+    --text: #E8EDF8;
+    --text-muted: #6B7A99;
+    --text-dim: #9CA8BE;
+    --border: rgba(255,255,255,0.07);
+    --glow: rgba(0,212,170,0.15);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  body.modal-open { overflow: hidden; }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 0 5%;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(8,13,26,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    transition: all 0.3s ease;
+  }
+
+  .nav-logo {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+  }
+  .nav-logo span { color: var(--text-muted); }
+
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+
+  .nav-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px; left: 0;
+    width: 0; height: 1px;
+    background: var(--accent);
+    transition: width 0.3s ease;
+  }
+  .nav-links a:hover { color: var(--text); }
+  .nav-links a:hover::after { width: 100%; }
+
+  .nav-cta {
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent) !important;
+    padding: 8px 20px;
+    border-radius: 4px;
+    transition: all 0.2s !important;
+  }
+  .nav-cta:hover { background: var(--accent) !important; color: var(--bg) !important; }
+  .nav-cta::after { display: none !important; }
+
+  /* HERO */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 80px 5% 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,170,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,170,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 20%, black, transparent);
+  }
+
+  .hero-glow {
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(0,212,170,0.08) 0%, transparent 70%);
+    top: -100px; right: -100px;
+    pointer-events: none;
+    animation: floatGlow 8s ease-in-out infinite alternate;
+  }
+
+  .hero-glow2 {
+    position: absolute;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(0,153,255,0.05) 0%, transparent 70%);
+    bottom: 0; left: 10%;
+    pointer-events: none;
+    animation: floatGlow 10s ease-in-out infinite alternate-reverse;
+  }
+
+  @keyframes floatGlow {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(30px, 20px) scale(1.1); }
+  }
+
+  .hero-content { position: relative; z-index: 1; max-width: 800px; }
+
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    margin-bottom: 28px;
+    letter-spacing: 0.1em;
+  }
+  .hero-tag::before { content: ''; width: 24px; height: 1px; background: var(--accent); }
+
+  .hero-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(48px, 7vw, 88px);
+    font-weight: 700;
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    margin-bottom: 16px;
+  }
+  .hero-name .highlight {
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(0,212,170,0.6);
+  }
+
+  .hero-title {
+    font-size: clamp(18px, 2.5vw, 24px);
+    color: var(--text-dim);
+    font-weight: 400;
+    margin-bottom: 28px;
+  }
+
+  .terminal-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-bottom: 40px;
+    max-width: 560px;
+    position: relative;
+    overflow: hidden;
+  }
+  .terminal-wrap::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+  }
+
+  .terminal-dots { display: flex; gap: 6px; margin-bottom: 14px; }
+  .terminal-dots span { width: 10px; height: 10px; border-radius: 50%; }
+  .dot-r { background: #FF5F57; }
+  .dot-y { background: #FFBD2E; }
+  .dot-g { background: #28C840; }
+
+  .terminal-line {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.9;
+  }
+
+  #typing-text {
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+  }
+
+  .cursor {
+    display: inline-block;
+    width: 8px; height: 14px;
+    background: var(--accent);
+    margin-left: 2px;
+    vertical-align: middle;
+    animation: blink 1s step-end infinite;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--accent);
+    color: #060A14;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 14px 28px;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: all 0.2s;
+    letter-spacing: 0.02em;
+  }
+  .btn-primary:hover {
+    background: #00F0C0;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0,212,170,0.3);
+  }
+
+  .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-size: 14px;
+    padding: 14px 28px;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .btn-outline:hover {
+    border-color: var(--text-muted);
+    color: var(--text);
+    transform: translateY(-2px);
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 40px; left: 5%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .scroll-line {
+    width: 40px; height: 1px;
+    background: var(--text-muted);
+    position: relative;
+    overflow: hidden;
+  }
+  .scroll-line::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: var(--accent);
+    animation: slideLine 2s ease-in-out infinite;
+  }
+  @keyframes slideLine { 0%{left:-100%} 100%{left:100%} }
+
+  /* SECTION */
+  section { padding: 100px 5%; position: relative; }
+
+  .section-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+    line-height: 1.1;
+  }
+  .section-sub {
+    color: var(--text-muted);
+    font-size: 16px;
+    max-width: 560px;
+    margin-bottom: 64px;
+  }
+  .divider { width: 100%; height: 1px; background: var(--border); }
+
+  /* ABOUT */
+  #about { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+
+  .about-text p { color: var(--text-dim); margin-bottom: 20px; font-size: 15px; line-height: 1.8; }
+  .about-text p strong { color: var(--text); font-weight: 600; }
+
+  .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 40px; }
+  .stat-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    transition: border-color 0.3s;
+  }
+  .stat-box:hover { border-color: rgba(0,212,170,0.3); }
+  .stat-num {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stat-label { font-size: 13px; color: var(--text-muted); }
+
+  .about-right { display: flex; flex-direction: column; gap: 20px; }
+  .skill-category {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 24px;
+    transition: all 0.3s;
+  }
+  .skill-category:hover { border-color: rgba(0,212,170,0.25); transform: translateX(4px); }
+  .skill-cat-label {
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .skill-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tag {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-family: 'JetBrains Mono', monospace;
+    transition: all 0.2s;
+  }
+  .tag:hover {
+    background: rgba(0,212,170,0.1);
+    border-color: rgba(0,212,170,0.4);
+    color: var(--accent);
+  }
+
+  /* PROJECTS */
+  #projects { background: var(--surface); }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 24px;
+  }
+
+  .project-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    position: relative;
+    cursor: pointer;
+  }
+  .project-card:hover {
+    border-color: rgba(0,212,170,0.35);
+    transform: translateY(-6px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(0,212,170,0.1);
+  }
+
+  /* CLICK HINT BADGE */
+  .card-click-hint {
+    position: absolute;
+    top: 16px; right: 16px;
+    background: rgba(0,212,170,0.12);
+    border: 1px solid rgba(0,212,170,0.25);
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    padding: 4px 10px;
+    border-radius: 100px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: all 0.25s ease;
+    pointer-events: none;
+  }
+  .project-card:hover .card-click-hint {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .project-card-top { padding: 28px 28px 0; }
+  .project-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+  .project-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+  }
+  .project-desc {
+    color: var(--text-muted);
+    font-size: 14px;
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+  .project-tech {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 0 28px 24px;
+  }
+  .tech-badge {
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--accent);
+    background: rgba(0,212,170,0.08);
+    border: 1px solid rgba(0,212,170,0.2);
+    padding: 3px 10px;
+    border-radius: 4px;
+  }
+  .project-footer {
+    border-top: 1px solid var(--border);
+    padding: 16px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .project-url {
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text-muted);
+  }
+  .project-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+    transition: gap 0.2s;
+  }
+  .project-link:hover { gap: 10px; }
+  .project-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .status-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 2s ease infinite;
+  }
+  @keyframes pulse {
+    0%,100%{opacity:1; transform:scale(1)}
+    50%{opacity:0.4; transform:scale(1.5)}
+  }
+
+  /* ===================== MODAL ===================== */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 500;
+    background: rgba(4, 7, 16, 0.9);
+    backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  .modal-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .modal-box {
+    background: var(--surface);
+    border: 1px solid rgba(0,212,170,0.2);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 780px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    transform: translateY(32px) scale(0.97);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+  .modal-overlay.open .modal-box {
+    transform: translateY(0) scale(1);
+  }
+  .modal-box::-webkit-scrollbar { width: 4px; }
+  .modal-box::-webkit-scrollbar-track { background: transparent; }
+  .modal-box::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+  .modal-topbar {
+    position: sticky;
+    top: 0;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 10;
+  }
+  .modal-topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .modal-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .modal-title-sm {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .modal-close {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .modal-close:hover { background: rgba(255,255,255,0.1); color: var(--text); }
+
+  .modal-body { padding: 36px 28px 40px; }
+
+  .modal-hero {
+    margin-bottom: 36px;
+  }
+  .modal-headline {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(24px, 3vw, 32px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin-bottom: 16px;
+  }
+  .modal-tagline {
+    color: var(--text-dim);
+    font-size: 15px;
+    line-height: 1.75;
+    max-width: 620px;
+  }
+
+  .modal-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 28px 0;
+  }
+
+  .modal-section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  /* Business context grid */
+  .modal-context-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .modal-context-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    transition: border-color 0.2s;
+  }
+  .modal-context-card:hover { border-color: rgba(0,212,170,0.2); }
+  .modal-context-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .modal-context-val {
+    font-size: 14px;
+    color: var(--text);
+    font-weight: 500;
+    line-height: 1.5;
+  }
+
+  /* Features list */
+  .modal-features {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .modal-feature {
+    display: flex;
+    gap: 14px;
+    padding: 16px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    transition: border-color 0.2s;
+  }
+  .modal-feature:hover { border-color: rgba(0,212,170,0.2); }
+  .modal-feature-icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    background: rgba(0,212,170,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .modal-feature-content {}
+  .modal-feature-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .modal-feature-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  /* Impact metrics */
+  .modal-impact {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .modal-metric {
+    background: rgba(0,212,170,0.05);
+    border: 1px solid rgba(0,212,170,0.15);
+    border-radius: 10px;
+    padding: 18px 16px;
+    text-align: center;
+  }
+  .modal-metric-num {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .modal-metric-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+
+  /* Tech stack in modal */
+  .modal-tech { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
+
+  /* CTA */
+  .modal-cta {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .modal-btn-live {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--accent);
+    color: #060A14;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 12px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .modal-btn-live:hover {
+    background: #00F0C0;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,212,170,0.25);
+  }
+  .modal-btn-internal {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 14px;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: default;
+  }
+
+  /* EXPERIENCE */
+  .exp-list { display: flex; flex-direction: column; gap: 0; }
+  .exp-item {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 40px;
+    padding: 48px 0;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .exp-item::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0;
+    width: 2px; height: 0;
+    background: var(--accent);
+    transition: height 0.5s ease;
+  }
+  .exp-item:hover::before { height: 100%; }
+  .exp-period {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    letter-spacing: 0.05em;
+  }
+  .exp-company { font-size: 13px; color: var(--text-dim); font-weight: 500; }
+  .exp-badge {
+    display: inline-block;
+    margin-top: 12px;
+    font-size: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--accent);
+    background: rgba(0,212,170,0.08);
+    border: 1px solid rgba(0,212,170,0.2);
+    padding: 3px 10px;
+    border-radius: 4px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .exp-role {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+  }
+  .exp-points { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .exp-points li {
+    color: var(--text-dim);
+    font-size: 14px;
+    padding-left: 20px;
+    position: relative;
+    line-height: 1.7;
+  }
+  .exp-points li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-size: 12px;
+    top: 3px;
+  }
+  .exp-highlights { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+
+  /* EDUCATION */
+  .edu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .edu-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 28px;
+    transition: all 0.3s;
+  }
+  .edu-card:hover { border-color: rgba(0,212,170,0.25); transform: translateY(-3px); }
+  .edu-icon { font-size: 24px; margin-bottom: 16px; }
+  .edu-degree {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+  .edu-school { font-size: 13px; color: var(--text-muted); margin-bottom: 12px; }
+  .edu-period {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+  }
+
+  /* CONTACT */
+  #contact { background: var(--surface); text-align: center; }
+  .contact-inner { max-width: 600px; margin: 0 auto; }
+  .contact-email {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(24px, 3vw, 36px);
+    font-weight: 700;
+    color: var(--text);
+    text-decoration: none;
+    letter-spacing: -0.02em;
+    display: inline-block;
+    margin: 32px 0;
+    transition: color 0.2s;
+    position: relative;
+  }
+  .contact-email::after {
+    content: '';
+    position: absolute;
+    bottom: -4px; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+  }
+  .contact-email:hover { color: var(--accent); }
+  .contact-email:hover::after { transform: scaleX(1); }
+  .contact-links { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 24px; }
+  .contact-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    padding: 10px 20px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    transition: all 0.2s;
+  }
+  .contact-link:hover {
+    color: var(--accent);
+    border-color: rgba(0,212,170,0.4);
+    background: rgba(0,212,170,0.05);
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 32px 5%;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .footer-copy { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text-muted); }
+  .footer-right {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* ===================== REVEAL ANIMATION (bi-directional) ===================== */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.65s ease, transform 0.65s ease;
+  }
+  .reveal.from-top {
+    transform: translateY(-28px);
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  /* When scrolling back up, re-hide from below */
+  .reveal.hidden-below {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  .reveal.hidden-above {
+    opacity: 0;
+    transform: translateY(-28px);
+  }
+
+  /* GITHUB SECTION */
+  #github { background: var(--bg); }
+
+  .github-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 48px;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .github-profile-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 8px 18px 8px 8px;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .github-profile-pill:hover {
+    border-color: rgba(0,212,170,0.35);
+    background: var(--surface2);
+  }
+  .github-avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: var(--surface2);
+  }
+  .github-avatar-placeholder {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--surface2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+  }
+  .github-username {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+  .github-username span { color: var(--accent); }
+
+  .github-stats-row {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+  }
+  .github-stat {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .github-stat-num {
+    color: var(--text);
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  .repos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+  }
+
+  .repo-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 22px;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: all 0.25s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .repo-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+  }
+  .repo-card:hover {
+    border-color: rgba(0,212,170,0.25);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+  }
+  .repo-card:hover::before { transform: scaleX(1); }
+
+  .repo-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: -0.01em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .repo-fork-badge {
+    font-size: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text-muted);
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-weight: 400;
+  }
+  .repo-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    flex: 1;
+  }
+  .repo-meta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+  }
+  .repo-lang {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .lang-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .repo-stars {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .repo-updated {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    margin-left: auto;
+  }
+
+  /* Skeleton loading */
+  .repo-skeleton {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .skel {
+    background: linear-gradient(90deg, var(--surface2) 25%, rgba(255,255,255,0.04) 50%, var(--surface2) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+  }
+  @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+  .skel-title { height: 16px; width: 60%; }
+  .skel-desc { height: 12px; width: 90%; }
+  .skel-desc2 { height: 12px; width: 75%; }
+  .skel-meta { height: 10px; width: 40%; }
+
+  .github-empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-muted);
+    font-size: 14px;
+    grid-column: 1 / -1;
+  }
+  .github-empty a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .github-view-all {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 36px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 13px;
+    font-family: 'JetBrains Mono', monospace;
+    border: 1px solid var(--border);
+    padding: 10px 20px;
+    border-radius: 6px;
+    transition: all 0.2s;
+  }
+  .github-view-all:hover {
+    color: var(--accent);
+    border-color: rgba(0,212,170,0.4);
+    background: rgba(0,212,170,0.05);
+  }
+
+  /* MOBILE */
+  @media (max-width: 768px) {
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+    section { padding: 80px 20px; }
+    #about { grid-template-columns: 1fr; gap: 40px; }
+    .exp-item { grid-template-columns: 1fr; gap: 12px; }
+    .edu-grid { grid-template-columns: 1fr; }
+    .stat-grid { grid-template-columns: 1fr 1fr; }
+    footer { flex-direction: column; gap: 12px; text-align: center; }
+    .modal-context-grid { grid-template-columns: 1fr; }
+    .modal-impact { grid-template-columns: 1fr 1fr; }
+    .modal-body { padding: 24px 20px 32px; }
+    .modal-topbar { padding: 16px 20px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">ilham<span>.dev</span></div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#github">GitHub</a></li>
+    <li><a href="#contact" class="nav-cta">Hire Me</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Full Stack Developer</div>
+    <h1 class="hero-name">Ilham<br><span class="highlight">Farizan</span></h1>
+    <p class="hero-title">Building enterprise systems that scale — from warehouse floors to boardroom dashboards.</p>
+    <div class="terminal-wrap">
+      <div class="terminal-dots">
+        <span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span>
+      </div>
+      <div class="terminal-line"><span style="color:var(--accent)">$ </span><span style="color:#7EC8FF">whoami</span></div>
+      <div class="terminal-line" style="color:var(--text); margin-bottom:8px">→ Full Stack Developer @ PT Gondowangi</div>
+      <div class="terminal-line"><span style="color:var(--accent)">$ </span><span style="color:#7EC8FF">stack</span></div>
+      <div class="terminal-line"><span id="typing-text"></span><span class="cursor"></span></div>
+    </div>
+    <div class="hero-actions">
+      <a href="#projects" class="btn-primary">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19l-7-7 7-7M22 12H3"/></svg>
+        View My Work
+      </a>
+      <a href="mailto:farizanilham7@gmail.com" class="btn-outline">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        Get In Touch
+      </a>
+    </div>
+  </div>
+  <div class="scroll-hint"><span class="scroll-line"></span>scroll to explore</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-text reveal">
+    <div class="section-eyebrow">// about me</div>
+    <h2 class="section-title">Turning complex<br>operations into<br>elegant software.</h2>
+    <p>I'm a Computer Science student at Universitas Bina Sarana Informatika with hands-on experience building <strong>enterprise-grade systems</strong> — from end-to-end warehouse management platforms to financial workflow automation.</p>
+    <p>My focus is on the intersection of <strong>operational complexity and digital simplicity</strong>: understanding how a business actually runs on the ground, then architecting systems that make that reality faster, smarter, and more transparent.</p>
+    <p>Currently serving as the primary developer at <strong>PT Gondowangi Tradisional Kosmetik</strong>, where I've built multiple production systems handling real supply chains, financial approvals, and HR processes from scratch.</p>
+    <div class="stat-grid">
+      <div class="stat-box"><div class="stat-num">4+</div><div class="stat-label">Production systems built</div></div>
+      <div class="stat-box"><div class="stat-num">2+</div><div class="stat-label">Years of industry experience</div></div>
+      <div class="stat-box"><div class="stat-num">8+</div><div class="stat-label">Certifications earned</div></div>
+      <div class="stat-box"><div class="stat-num">∞</div><div class="stat-label">Bugs fixed (and counting)</div></div>
+    </div>
+  </div>
+  <div class="about-right reveal" style="transition-delay:0.12s">
+    <div class="skill-category"><div class="skill-cat-label">// Backend</div><div class="skill-tags"><span class="tag">PHP / Laravel</span><span class="tag">Golang</span><span class="tag">Node.js</span><span class="tag">RESTful API</span><span class="tag">Microservices</span></div></div>
+    <div class="skill-category"><div class="skill-cat-label">// Frontend</div><div class="skill-tags"><span class="tag">Vue.js</span><span class="tag">TypeScript</span><span class="tag">Inertia.js</span><span class="tag">React</span></div></div>
+    <div class="skill-category"><div class="skill-cat-label">// Infrastructure</div><div class="skill-tags"><span class="tag">Docker</span><span class="tag">CI/CD</span><span class="tag">PostgreSQL</span><span class="tag">MySQL</span><span class="tag">AWS</span></div></div>
+    <div class="skill-category"><div class="skill-cat-label">// Data & Analytics</div><div class="skill-tags"><span class="tag">Python</span><span class="tag">Pandas</span><span class="tag">Streamlit</span><span class="tag">BI Dashboards</span></div></div>
+    <div class="skill-category"><div class="skill-cat-label">// Enterprise Domain</div><div class="skill-tags"><span class="tag">ERP Integration</span><span class="tag">WMS Architecture</span><span class="tag">RBAC</span><span class="tag">Supply Chain</span><span class="tag">FEFO Logic</span></div></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-eyebrow reveal">// live projects</div>
+  <h2 class="section-title reveal">Systems in Production</h2>
+  <p class="section-sub reveal">Real platforms running in production — not demo projects. Click any card for the full story.</p>
+
+  <div class="projects-grid">
+
+    <!-- CARD 1: WMS -->
+    <div class="project-card reveal" data-project="wms">
+      <div class="card-click-hint">Read more ↗</div>
+      <div class="project-card-top">
+        <div class="project-icon">🏭</div>
+        <div class="project-name">Warehouse Management System</div>
+        <p class="project-desc">End-to-end WMS handling the complete material lifecycle with real-time QR scanning, FEFO algorithm, Stock Aging analysis, and Business Intelligence dashboards.</p>
+      </div>
+      <div class="project-tech">
+        <span class="tech-badge">Laravel</span><span class="tech-badge">Vue.js</span><span class="tech-badge">MySQL</span><span class="tech-badge">Docker</span><span class="tech-badge">RESTful API</span>
+      </div>
+      <div class="project-footer">
+        <div>
+          <div class="project-status"><span class="status-dot"></span>Live</div>
+          <div class="project-url">warehouse.gondowangi.com</div>
+        </div>
+        <a href="https://warehouse.gondowangi.com" target="_blank" class="project-link" onclick="event.stopPropagation()">Visit →</a>
+      </div>
+    </div>
+
+    <!-- CARD 2: Approval -->
+    <div class="project-card reveal" style="transition-delay:0.1s" data-project="approval">
+      <div class="card-click-hint">Read more ↗</div>
+      <div class="project-card-top">
+        <div class="project-icon">✅</div>
+        <div class="project-name">Financial Approval System</div>
+        <p class="project-desc">Centralized workflow automation for operational finance with multi-level approval matrix, audit trails, and paperless expense management.</p>
+      </div>
+      <div class="project-tech">
+        <span class="tech-badge">Laravel</span><span class="tech-badge">Vue.js</span><span class="tech-badge">Inertia.js</span><span class="tech-badge">RBAC</span>
+      </div>
+      <div class="project-footer">
+        <div>
+          <div class="project-status"><span class="status-dot"></span>Live</div>
+          <div class="project-url">approval.gondowangi.com</div>
+        </div>
+        <a href="https://approval.gondowangi.com" target="_blank" class="project-link" onclick="event.stopPropagation()">Visit →</a>
+      </div>
+    </div>
+
+    <!-- CARD 3: LMS -->
+    <div class="project-card reveal" style="transition-delay:0.2s" data-project="lms">
+      <div class="card-click-hint">Read more ↗</div>
+      <div class="project-card-top">
+        <div class="project-icon">📚</div>
+        <div class="project-name">GrowMax — Learning Management System</div>
+        <p class="project-desc">Enterprise LMS with multi-level dashboards, video modules, automated test evaluation, real-time chat, and dynamic activity visualizations.</p>
+      </div>
+      <div class="project-tech">
+        <span class="tech-badge">Laravel</span><span class="tech-badge">Vue.js</span><span class="tech-badge">WebSocket</span><span class="tech-badge">SPA</span>
+      </div>
+      <div class="project-footer">
+        <div>
+          <div class="project-status"><span class="status-dot"></span>Live</div>
+          <div class="project-url">growmax.gondowangi.com</div>
+        </div>
+        <a href="https://growmax.gondowangi.com" target="_blank" class="project-link" onclick="event.stopPropagation()">Visit →</a>
+      </div>
+    </div>
+
+    <!-- CARD 4: CMS -->
+    <div class="project-card reveal" style="transition-delay:0.3s" data-project="cms">
+      <div class="card-click-hint">Read more ↗</div>
+      <div class="project-card-top">
+        <div class="project-icon">🌐</div>
+        <div class="project-name">Corporate Web Portal & CMS</div>
+        <p class="project-desc">Official company website with a custom-built CMS empowering non-technical teams to manage digital assets independently.</p>
+      </div>
+      <div class="project-tech">
+        <span class="tech-badge">Laravel</span><span class="tech-badge">Vue.js</span><span class="tech-badge">Custom CMS</span><span class="tech-badge">SEO</span>
+      </div>
+      <div class="project-footer">
+        <div>
+          <div class="project-status"><span class="status-dot"></span>Live</div>
+          <div class="project-url">gondowangi.com</div>
+        </div>
+        <a href="https://gondowangi.com" target="_blank" class="project-link" onclick="event.stopPropagation()">Visit →</a>
+      </div>
+    </div>
+
+    <!-- CARD 5: ATS -->
+    <div class="project-card reveal" style="transition-delay:0.15s" data-project="ats">
+      <div class="card-click-hint">Read more ↗</div>
+      <div class="project-card-top">
+        <div class="project-icon">👥</div>
+        <div class="project-name">HR Recruitment Portal (ATS)</div>
+        <p class="project-desc">Internal Applicant Tracking System digitizing the full recruitment pipeline from Job Requisition to Candidate Pipeline with strict RBAC.</p>
+      </div>
+      <div class="project-tech">
+        <span class="tech-badge">Laravel</span><span class="tech-badge">Vue.js</span><span class="tech-badge">RBAC</span><span class="tech-badge">SPA</span>
+      </div>
+      <div class="project-footer">
+        <div>
+          <div class="project-status"><span class="status-dot"></span>Internal</div>
+          <div class="project-url">Internal System</div>
+        </div>
+        <span class="project-link" style="opacity:0.4; cursor:default">Private</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-eyebrow reveal">// work history</div>
+  <h2 class="section-title reveal">Experience</h2>
+  <p class="section-sub reveal">Where I've built things that matter.</p>
+  <div class="exp-list">
+    <div class="exp-item reveal">
+      <div class="exp-meta">
+        <div class="exp-period">Mar 2025 — Present</div>
+        <div class="exp-company">PT Gondowangi Tradisional Kosmetik</div>
+        <div class="exp-badge">Full-time</div>
+      </div>
+      <div class="exp-content">
+        <div class="exp-role">Web Developer Staff</div>
+        <ul class="exp-points">
+          <li>Architected and shipped a full end-to-end Warehouse Management System (WMS) digitizing the entire material lifecycle — Incoming, QC, Putaway, Picking, and Returns — with real-time QR scanning to reduce bottlenecks and human error.</li>
+          <li>Designed a Direct Inventory Decrement algorithm combining FEFO logic with optimized picking routes to accelerate fulfillment SLA.</li>
+          <li>Built a centralized financial workflow automation system, replacing all paper-based approvals with a multi-level matrix escalating from staff to board.</li>
+          <li>Developed an internal ATS from scratch, digitizing the full recruitment pipeline and reducing dependency on physical documents.</li>
+          <li>Created Business Intelligence dashboards translating raw operational data into real-time insights on Cost Ratio, Delivery Performance, and capital asset valuation.</li>
+        </ul>
+        <div class="exp-highlights">
+          <span class="tag">WMS</span><span class="tag">ERP Integration</span><span class="tag">Laravel</span><span class="tag">Vue.js</span><span class="tag">Docker</span><span class="tag">Business Intelligence</span>
+        </div>
+      </div>
+    </div>
+    <div class="exp-item reveal">
+      <div class="exp-meta">
+        <div class="exp-period">Sep 2024 — Mar 2025</div>
+        <div class="exp-company">PT Gondowangi</div>
+        <div class="exp-badge">Internship</div>
+      </div>
+      <div class="exp-content">
+        <div class="exp-role">Web Developer Intern</div>
+        <ul class="exp-points">
+          <li>Designed and built GrowMax, a full-featured Learning Management System with multi-level dashboards, video module management, automated test evaluation, and real-time chat.</li>
+          <li>Implemented preference-based onboarding flows and dynamic user activity visualization using interactive line charts.</li>
+          <li>Built real-time notification infrastructure and automated learning duration tracking.</li>
+        </ul>
+        <div class="exp-highlights">
+          <span class="tag">Laravel</span><span class="tag">Vue.js</span><span class="tag">WebSocket</span><span class="tag">SPA</span>
+        </div>
+      </div>
+    </div>
+    <div class="exp-item reveal">
+      <div class="exp-meta">
+        <div class="exp-period">Aug 2023 — Dec 2023</div>
+        <div class="exp-company">PT Jakarta Lingko Indonesia</div>
+        <div class="exp-badge">MSIB Internship</div>
+      </div>
+      <div class="exp-content">
+        <div class="exp-role">IT Developer Intern</div>
+        <ul class="exp-points">
+          <li>Developed and enhanced internal web platforms, implementing secure OAuth and API authentication layers for controlled data access.</li>
+          <li>Built application management features for admin and internal users to monitor, configure, and maintain apps in production.</li>
+          <li>Designed and structured relational database schemas ensuring data integrity and query efficiency.</li>
+        </ul>
+        <div class="exp-highlights">
+          <span class="tag">PHP</span><span class="tag">MySQL</span><span class="tag">Authentication</span><span class="tag">API</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="section-eyebrow reveal">// education & credentials</div>
+  <h2 class="section-title reveal">Learning Never Stops</h2>
+  <p class="section-sub reveal">Formal education backed by continuous self-driven learning.</p>
+  <div class="edu-grid">
+    <div class="edu-card reveal"><div class="edu-icon">🎓</div><div class="edu-degree">S1 Teknik Informatika</div><div class="edu-school">Universitas Bina Sarana Informatika</div><div class="edu-period">09/2021 — 09/2025</div></div>
+    <div class="edu-card reveal" style="transition-delay:0.1s"><div class="edu-icon">☁️</div><div class="edu-degree">Google IT Automation with Python</div><div class="edu-school">Google Cloud Professional Certificate</div><div class="edu-period">2025 — Present</div></div>
+    <div class="edu-card reveal" style="transition-delay:0.15s"><div class="edu-icon">🦫</div><div class="edu-degree">Mastering Golang Microservices</div><div class="edu-school">BuildWithAngga — Warehouse & Point of Sales</div><div class="edu-period">2025 — Present</div></div>
+    <div class="edu-card reveal" style="transition-delay:0.2s"><div class="edu-icon">🌩️</div><div class="edu-degree">Cloud Practitioner Essentials</div><div class="edu-school">Dicoding Indonesia — AWS Cloud</div><div class="edu-period">2023 — 2026</div></div>
+    <div class="edu-card reveal" style="transition-delay:0.25s"><div class="edu-icon">⚡</div><div class="edu-degree">Laravel Pemula Sampai Mahir</div><div class="edu-school">Udemy — Full Laravel Curriculum</div><div class="edu-period">2024 — Present</div></div>
+    <div class="edu-card reveal" style="transition-delay:0.3s"><div class="edu-icon">🟨</div><div class="edu-degree">The Complete JavaScript Course 2024</div><div class="edu-school">Udemy — Zero to Expert</div><div class="edu-period">2023 — Present</div></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- GITHUB -->
+<section id="github">
+  <div class="github-header">
+    <div>
+      <div class="section-eyebrow reveal">// open source & personal projects</div>
+      <h2 class="section-title reveal" style="margin-bottom:0">GitHub Repositories</h2>
+    </div>
+    <a href="https://github.com/farizan-il" target="_blank" class="github-profile-pill reveal">
+      <div class="github-avatar-placeholder" id="ghAvatarWrap">
+        <img id="ghAvatar" style="display:none; width:32px; height:32px; border-radius:50%; object-fit:cover;" alt="avatar">
+        <span id="ghAvatarFallback">👤</span>
+      </div>
+      <span class="github-username"><span>@</span>farizan-il</span>
+    </a>
+  </div>
+
+  <div class="github-stats-row reveal" id="ghStatsRow" style="display:none">
+    <div class="github-stat">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 3h18v18H3zM3 9h18M9 21V9"/></svg>
+      <span class="github-stat-num" id="ghRepoCount">—</span> public repos
+    </div>
+    <div class="github-stat">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      <span class="github-stat-num" id="ghFollowers">—</span> followers
+    </div>
+    <div class="github-stat">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72m2.54-15.38c-3.72 4.35-8.94 5.66-16.88 5.85m19.5 1.9c-3.5-.93-6.63-.82-8.94 0-2.58.92-5.01 2.86-7.44 6.32"/></svg>
+      <span class="github-stat-num" id="ghFollowing">—</span> following
+    </div>
+  </div>
+
+  <div class="repos-grid" id="reposGrid">
+    <!-- Skeleton loading state -->
+    <div class="repo-skeleton"><div class="skel skel-title"></div><div class="skel skel-desc"></div><div class="skel skel-desc2"></div><div class="skel skel-meta"></div></div>
+    <div class="repo-skeleton"><div class="skel skel-title"></div><div class="skel skel-desc"></div><div class="skel skel-desc2"></div><div class="skel skel-meta"></div></div>
+    <div class="repo-skeleton"><div class="skel skel-title"></div><div class="skel skel-desc"></div><div class="skel skel-meta"></div></div>
+    <div class="repo-skeleton"><div class="skel skel-title"></div><div class="skel skel-desc"></div><div class="skel skel-desc2"></div><div class="skel skel-meta"></div></div>
+    <div class="repo-skeleton"><div class="skel skel-title"></div><div class="skel skel-desc"></div><div class="skel skel-meta"></div></div>
+    <div class="repo-skeleton"><div class="skel skel-title"></div><div class="skel skel-desc"></div><div class="skel skel-desc2"></div><div class="skel skel-meta"></div></div>
+  </div>
+
+  <a href="https://github.com/farizan-il?tab=repositories" target="_blank" class="github-view-all reveal" id="ghViewAll" style="display:none">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+    View all repositories on GitHub
+  </a>
+</section>
+
+<div class="divider"></div>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-inner reveal">
+    <div class="section-eyebrow" style="text-align:center">// let's build something</div>
+    <h2 class="section-title" style="text-align:center">Have a complex system<br>that needs building?</h2>
+    <p style="color:var(--text-muted); font-size:15px">I'm currently open to new opportunities — whether it's a full-time role or a challenging project that needs someone who understands both the technical and operational side.</p>
+    <a href="mailto:farizanilham7@gmail.com" class="contact-email">farizanilham7@gmail.com</a>
+    <div class="contact-links">
+      <a href="https://github.com/farizan-il" target="_blank" class="contact-link">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+        github.com/farizan-il
+      </a>
+      <a href="tel:081317710744" class="contact-link">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.41 2 2 0 0 1 3.6 1.21h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8 8.09a16 16 0 0 0 6 6l.86-.86a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        081317710744
+      </a>
+      <a href="https://gondowangi.com" target="_blank" class="contact-link">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        gondowangi.com
+      </a>
+      <span class="contact-link" style="cursor:default">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Depok, Indonesia
+      </span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-copy">© 2025 Ilham Farizan. All rights reserved.</div>
+  <div class="footer-right">
+    <span class="status-dot" style="background:var(--accent); animation:pulse 2s ease infinite"></span>
+    Available for opportunities
+  </div>
+</footer>
+
+<!-- =================== PROJECT MODAL =================== -->
+<div class="modal-overlay" id="projectModal">
+  <div class="modal-box" id="modalBox">
+    <div class="modal-topbar">
+      <div class="modal-topbar-left">
+        <div class="modal-icon" id="mIcon"></div>
+        <div class="modal-title-sm" id="mTitleSm"></div>
+      </div>
+      <button class="modal-close" id="modalClose" aria-label="Close">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+/* ============ TYPING ANIMATION ============ */
+const lines = [
+  '→ Laravel · Vue.js · Golang · Node.js',
+  '→ Docker · PostgreSQL · MySQL · AWS',
+  '→ Microservices · CI/CD · RESTful API',
+  '→ ERP · WMS · BI Dashboards · RBAC',
+];
+let lineIdx = 0, charIdx = 0, deleting = false;
+const el = document.getElementById('typing-text');
+
+function type() {
+  const current = lines[lineIdx];
+  if (!deleting) {
+    el.textContent = current.slice(0, charIdx + 1);
+    charIdx++;
+    if (charIdx === current.length) { deleting = true; setTimeout(type, 2200); return; }
+  } else {
+    el.textContent = current.slice(0, charIdx - 1);
+    charIdx--;
+    if (charIdx === 0) {
+      deleting = false;
+      lineIdx = (lineIdx + 1) % lines.length;
+      setTimeout(type, 400); return;
+    }
+  }
+  setTimeout(type, deleting ? 28 : 52);
+}
+setTimeout(type, 800);
+
+/* ============ BI-DIRECTIONAL SCROLL REVEAL ============ */
+const revealEls = document.querySelectorAll('.reveal');
+let lastScrollY = window.scrollY;
+
+function checkReveal() {
+  const scrollY = window.scrollY;
+  const scrollingDown = scrollY >= lastScrollY;
+  lastScrollY = scrollY;
+
+  revealEls.forEach(el => {
+    const rect = el.getBoundingClientRect();
+    const inView = rect.top < window.innerHeight * 0.88 && rect.bottom > window.innerHeight * 0.08;
+    const aboveView = rect.bottom < window.innerHeight * 0.08;
+    const belowView = rect.top > window.innerHeight * 0.88;
+
+    if (inView) {
+      el.classList.add('visible');
+      el.classList.remove('hidden-below', 'hidden-above', 'from-top');
+    } else if (aboveView) {
+      el.classList.remove('visible', 'hidden-below');
+      el.classList.add('hidden-above', 'from-top');
+    } else if (belowView) {
+      el.classList.remove('visible', 'hidden-above', 'from-top');
+      el.classList.add('hidden-below');
+    }
+  });
+}
+
+window.addEventListener('scroll', checkReveal, { passive: true });
+checkReveal();
+
+/* ============ NAV ACTIVE STATE ============ */
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => { if (window.scrollY >= s.offsetTop - 100) current = s.id; });
+  navLinks.forEach(a => {
+    a.style.color = a.getAttribute('href') === '#' + current ? 'var(--text)' : '';
+  });
+}, { passive: true });
+
+/* ============ GITHUB REPOS ============ */
+const LANG_COLORS = {
+  'PHP': '#4F5D95', 'JavaScript': '#f1e05a', 'TypeScript': '#3178c6',
+  'Vue': '#41b883', 'Python': '#3572A5', 'Go': '#00ADD8',
+  'CSS': '#563d7c', 'HTML': '#e34c26', 'Shell': '#89e051',
+  'Blade': '#f7523f', 'Java': '#b07219', 'Dockerfile': '#384d54',
+  'default': '#6B7A99'
+};
+
+function langColor(lang) {
+  return LANG_COLORS[lang] || LANG_COLORS['default'];
+}
+
+function timeAgo(dateStr) {
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const d = Math.floor(diff / 86400000);
+  if (d < 1) return 'today';
+  if (d < 7) return `${d}d ago`;
+  if (d < 30) return `${Math.floor(d/7)}w ago`;
+  if (d < 365) return `${Math.floor(d/30)}mo ago`;
+  return `${Math.floor(d/365)}y ago`;
+}
+
+function renderRepos(repos) {
+  const grid = document.getElementById('reposGrid');
+  if (!repos || repos.length === 0) {
+    grid.innerHTML = `<div class="github-empty">No public repositories found. <a href="https://github.com/farizan-il" target="_blank">View on GitHub →</a></div>`;
+    return;
+  }
+
+  grid.innerHTML = repos.map((r, i) => `
+    <a href="${r.html_url}" target="_blank" class="repo-card reveal" style="transition-delay:${(i % 6) * 0.07}s">
+      <div class="repo-name">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18v18H3zM3 9h18M9 21V9"/></svg>
+        ${r.name}
+        ${r.fork ? '<span class="repo-fork-badge">fork</span>' : ''}
+      </div>
+      ${r.description ? `<div class="repo-desc">${r.description}</div>` : '<div class="repo-desc" style="opacity:0.4;font-style:italic">No description</div>'}
+      <div class="repo-meta">
+        ${r.language ? `<div class="repo-lang"><span class="lang-dot" style="background:${langColor(r.language)}"></span>${r.language}</div>` : ''}
+        ${r.stargazers_count > 0 ? `<div class="repo-stars"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>${r.stargazers_count}</div>` : ''}
+        ${r.forks_count > 0 ? `<div class="repo-stars"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><path d="M18 9v1a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V9M12 12v3"/></svg>${r.forks_count}</div>` : ''}
+        <div class="repo-updated">${timeAgo(r.pushed_at)}</div>
+      </div>
+    </a>
+  `).join('');
+
+  // Re-observe new reveal elements
+  document.querySelectorAll('#reposGrid .reveal').forEach(el => {
+    observer2.observe(el);
+  });
+}
+
+// Separate observer for dynamically added repo cards
+const observer2 = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    const rect = e.target.getBoundingClientRect();
+    const inView = rect.top < window.innerHeight * 0.88 && rect.bottom > 0;
+    if (inView) {
+      e.target.classList.add('visible');
+      e.target.classList.remove('hidden-below', 'hidden-above', 'from-top');
+    }
+  });
+}, { threshold: 0.08 });
+
+async function loadGithub() {
+  const USERNAME = 'farizan-il';
+  try {
+    const [userRes, reposRes] = await Promise.all([
+      fetch(`https://api.github.com/users/${USERNAME}`),
+      fetch(`https://api.github.com/users/${USERNAME}/repos?sort=pushed&per_page=12`)
+    ]);
+
+    if (userRes.ok) {
+      const user = await userRes.json();
+      // Avatar
+      const img = document.getElementById('ghAvatar');
+      const fallback = document.getElementById('ghAvatarFallback');
+      if (user.avatar_url) {
+        img.src = user.avatar_url;
+        img.style.display = 'block';
+        fallback.style.display = 'none';
+      }
+      // Stats
+      document.getElementById('ghRepoCount').textContent = user.public_repos || 0;
+      document.getElementById('ghFollowers').textContent = user.followers || 0;
+      document.getElementById('ghFollowing').textContent = user.following || 0;
+      document.getElementById('ghStatsRow').style.display = 'flex';
+    }
+
+    if (reposRes.ok) {
+      const repos = await reposRes.json();
+      renderRepos(repos);
+      document.getElementById('ghViewAll').style.display = 'inline-flex';
+    } else if (reposRes.status === 404) {
+      renderRepos([]);
+    } else {
+      // Rate limit or other error — show fallback
+      document.getElementById('reposGrid').innerHTML = `
+        <div class="github-empty">
+          Couldn't load repositories right now (API rate limit).<br>
+          <a href="https://github.com/farizan-il?tab=repositories" target="_blank">View directly on GitHub →</a>
+        </div>`;
+      document.getElementById('ghViewAll').style.display = 'inline-flex';
+    }
+  } catch(err) {
+    document.getElementById('reposGrid').innerHTML = `
+      <div class="github-empty">
+        Couldn't connect to GitHub API.<br>
+        <a href="https://github.com/farizan-il?tab=repositories" target="_blank">View directly on GitHub →</a>
+      </div>`;
+    document.getElementById('ghViewAll').style.display = 'inline-flex';
+  }
+}
+
+loadGithub();
+
+const projects = {
+  wms: {
+    icon: '🏭',
+    title: 'Warehouse Management System',
+    headline: 'Digitizing the Entire Warehouse Operation — From Dock to Delivery',
+    tagline: 'PT Gondowangi mengelola gudang bahan baku kosmetik dengan ribuan SKU dan perputaran stok harian yang tinggi. Sebelum sistem ini ada, seluruh proses mulai dari penerimaan barang, quality check, hingga pengiriman ke produksi dijalankan secara manual dengan spreadsheet dan dokumen fisik — rentan error, lambat, dan hampir mustahil untuk diaudit secara real-time.',
+    context: [
+      { label: 'Industri', val: 'Manufaktur Kosmetik' },
+      { label: 'Skala Operasi', val: 'Ribuan SKU, multiple gudang' },
+      { label: 'Status', val: '🟢 Live in Production' },
+      { label: 'URL', val: 'warehouse.gondowangi.com' },
+    ],
+    features: [
+      { icon: '📦', title: 'End-to-End Material Lifecycle', desc: 'Sistem melacak setiap unit material mulai dari Incoming (penerimaan), Quality Control, Putaway, Picking, hingga Return — semua dalam satu platform yang terintegrasi.' },
+      { icon: '📱', title: 'Real-Time QR Scanning di Lapangan', desc: 'Operator gudang menggunakan scanner QR untuk validasi setiap mutasi barang secara langsung, mengeliminasi bottleneck operasional dan human error yang sebelumnya banyak terjadi.' },
+      { icon: '🧠', title: 'Algoritma FEFO + Direct Inventory Decrement', desc: 'Sistem secara otomatis menentukan urutan pengambilan barang berdasarkan First Expired First Out, dikombinasikan dengan optimasi rute picking untuk mempercepat SLA pengiriman ke lini produksi.' },
+      { icon: '🔒', title: 'Inventory Quarantine & Governance', desc: 'Protokol karantina berlapis untuk material reject/hold memastikan hanya barang tervalidasi yang bisa diproses. Setiap mutasi data tercatat dalam Audit Trail terpusat.' },
+      { icon: '🔍', title: 'Universal Search & Batch Tracing', desc: 'HRD atau manajer operasional dapat mencari posisi SKU mana pun secara instan, lengkap dengan pelacakan nomor Batch/Lot di seluruh ekosistem gudang.' },
+      { icon: '📊', title: 'Business Intelligence Dashboard', desc: 'Dashboard real-time menampilkan Cost Ratio Analysis, Delivery Performance, Days of Inventory (DOI), Stock Aging, dan valuasi aset kapital gudang berbasis Moving Average Price.' },
+    ],
+    metrics: [
+      { num: '100%', label: 'Paperless Inbound Process' },
+      { num: 'Real-time', label: 'Stock Visibility' },
+      { num: 'FEFO', label: 'Zero Expired Loss Algorithm' },
+    ],
+    tech: ['Laravel', 'Vue.js', 'MySQL', 'Docker', 'RESTful API', 'QR Integration', 'BI Dashboard'],
+    liveUrl: 'https://warehouse.gondowangi.com',
+  },
+
+  approval: {
+    icon: '✅',
+    title: 'Financial Approval System',
+    headline: 'Menggantikan 100% Proses Persetujuan Berbasis Kertas dengan Workflow Digital',
+    tagline: 'Di perusahaan manufaktur berskala menengah, proses pengajuan seperti Business Travel, Purchase Requisition, dan Expense Settlement biasanya berputar antara meja ke meja, dengan approval yang bergantung pada kehadiran fisik pejabat. Sistem ini mengubah seluruh alur tersebut menjadi digital — terstruktur, transparan, dan bisa diakses dari mana saja.',
+    context: [
+      { label: 'Tipe Sistem', val: 'Workflow Automation & Finance' },
+      { label: 'Coverage', val: 'Seluruh departemen operasional' },
+      { label: 'Status', val: '🟢 Live in Production' },
+      { label: 'URL', val: 'approval.gondowangi.com' },
+    ],
+    features: [
+      { icon: '🗂️', title: 'Multi-Type Financial Submission', desc: 'Menangani tiga jenis pengajuan utama: Business Travel Request, Purchase Requisition, dan Expense Settlement — masing-masing dengan form, validasi, dan alur approval yang berbeda.' },
+      { icon: '⬆️', title: 'Multi-Level Approval Matrix', desc: 'Eskalasi persetujuan berjenjang dari level staf → manajerial → direksi. Sistem secara otomatis menentukan siapa yang perlu memberikan approval berdasarkan nilai transaksi dan jenis pengajuan.' },
+      { icon: '📋', title: 'Comprehensive Audit Trail', desc: 'Setiap tindakan — approve, reject, revisi — dicatat lengkap dengan timestamp, user, dan catatan. Rekonsiliasi transfer dana menjadi transparan dan mudah diverifikasi.' },
+      { icon: '📧', title: 'Notifikasi & Reminders Otomatis', desc: 'Approver mendapat notifikasi real-time ketika ada pengajuan menunggu keputusan mereka, mengurangi idle time dalam siklus approval.' },
+      { icon: '⏱️', title: 'Approval Cycle Time Tracking', desc: 'Sistem merekam durasi setiap tahap approval, memberikan data kepada manajemen untuk mengidentifikasi bottleneck dalam proses keuangan internal.' },
+    ],
+    metrics: [
+      { num: '0', label: 'Dokumen Fisik yang Diproses' },
+      { num: '3+', label: 'Jenis Workflow Terotomasi' },
+      { num: 'Multi-level', label: 'Approval Matrix' },
+    ],
+    tech: ['Laravel', 'Vue.js', 'Inertia.js', 'RBAC', 'MySQL', 'Notification System'],
+    liveUrl: 'https://approval.gondowangi.com',
+  },
+
+  lms: {
+    icon: '📚',
+    title: 'GrowMax — Learning Management System',
+    headline: 'Platform Belajar Internal yang Menggantikan Pelatihan Offline Perusahaan',
+    tagline: 'GrowMax dibangun untuk memenuhi kebutuhan PT Gondowangi dalam menstandarisasi proses onboarding dan pelatihan karyawan yang sebelumnya dilakukan secara offline dan tidak terdokumentasi. Platform ini memungkinkan HR untuk mendistribusikan materi pelatihan, mengukur progres belajar, dan mengevaluasi pemahaman karyawan — semua dalam satu sistem yang dapat diakses kapan saja.',
+    context: [
+      { label: 'Tipe Platform', val: 'Enterprise Learning Management' },
+      { label: 'Target Pengguna', val: 'Seluruh karyawan PT Gondowangi' },
+      { label: 'Status', val: '🟢 Live in Production' },
+      { label: 'URL', val: 'growmax.gondowangi.com' },
+    ],
+    features: [
+      { icon: '🎛️', title: 'Multi-Level Dashboard', desc: 'Dashboard terpisah untuk Admin (manajemen konten dan pengguna, statistik platform) dan User (progres belajar, materi aktif, riwayat aktivitas).' },
+      { icon: '🎥', title: 'Video Module Management', desc: 'Admin dapat mengupload modul video, menyusun kurikulum per kelas, dan sistem secara otomatis menghitung total durasi belajar yang diperlukan per modul.' },
+      { icon: '📝', title: 'Automated Test Evaluation', desc: 'Kuis dan evaluasi dengan pembandingan jawaban otomatis. Sistem mengkalkulasi skor secara instan dan menyimpan riwayat percobaan untuk setiap peserta.' },
+      { icon: '🎯', title: 'Preference-Based Onboarding', desc: 'Alur onboarding yang dipersonalisasi berdasarkan departemen dan preferensi belajar karyawan baru, memastikan relevansi materi sejak hari pertama.' },
+      { icon: '💬', title: 'Real-Time Interactive Chat', desc: 'Fitur chat terintegrasi dengan real-time updates memungkinkan diskusi langsung antara peserta dan instruktur dalam konteks kelas yang sedang berjalan.' },
+      { icon: '📈', title: 'User Activity Visualization', desc: 'Grafik interaktif menampilkan detail aktivitas belajar pengguna secara dinamis — waktu belajar harian, modul yang diselesaikan, dan tren progres keseluruhan.' },
+    ],
+    metrics: [
+      { num: '100%', label: 'Digitalized Training Flow' },
+      { num: 'Auto', label: 'Test Scoring & Evaluation' },
+      { num: 'Real-time', label: 'Learning Progress Tracking' },
+    ],
+    tech: ['Laravel', 'Vue.js', 'WebSocket', 'SPA Architecture', 'MySQL', 'SweetAlert'],
+    liveUrl: 'https://growmax.gondowangi.com',
+  },
+
+  cms: {
+    icon: '🌐',
+    title: 'Corporate Web Portal & CMS',
+    headline: 'Kehadiran Digital Resmi Perusahaan yang Bisa Dikelola Sendiri oleh Tim Non-Teknis',
+    tagline: 'gondowangi.com adalah wajah digital resmi PT Gondowangi Tradisional Kosmetik kepada publik, mitra bisnis, media, dan calon karyawan. Tantangannya: website perusahaan harus selalu up-to-date, tapi tim marketing dan HR tidak memiliki kemampuan teknis untuk mengedit kode. Solusinya adalah membangun CMS yang benar-benar intuitif — bukan WordPress, tapi sistem yang dirancang khusus sesuai kebutuhan perusahaan.',
+    context: [
+      { label: 'Tipe Platform', val: 'Corporate Web Portal + CMS' },
+      { label: 'Audiens', val: 'Publik, mitra bisnis, calon karyawan' },
+      { label: 'Status', val: '🟢 Live in Production' },
+      { label: 'URL', val: 'gondowangi.com' },
+    ],
+    features: [
+      { icon: '🏢', title: 'Official Corporate Presence', desc: 'Portal web yang berfungsi sebagai pusat informasi strategis: profil perusahaan, lini produk, berita perusahaan, dan halaman karir — semua dalam satu platform yang representatif.' },
+      { icon: '✏️', title: 'Custom CMS untuk Non-Technical Team', desc: 'Sistem manajemen konten yang dibangun dari nol, dirancang agar tim marketing dan HR bisa memperbarui konten, berita, produk, dan lowongan kerja tanpa menyentuh satu baris kode pun.' },
+      { icon: '📱', title: 'Responsive & Performant Frontend', desc: 'Antarmuka yang dibangun dengan Vue.js memberikan pengalaman browsing yang smooth dan responsif di semua perangkat, meningkatkan brand perception perusahaan.' },
+      { icon: '🔗', title: 'Integrated Recruitment Module', desc: 'Halaman karir terhubung langsung ke sistem ATS internal, memungkinkan kandidat melamar pekerjaan dari website publik dan masuk langsung ke pipeline rekrutmen HR.' },
+    ],
+    metrics: [
+      { num: '0', label: 'Technical Dependency for Content Updates' },
+      { num: 'Full', label: 'Stack Ownership (BE + FE)' },
+      { num: 'Custom', label: 'CMS Built from Scratch' },
+    ],
+    tech: ['Laravel', 'Vue.js', 'Custom CMS', 'MySQL', 'SEO Optimization', 'Responsive Design'],
+    liveUrl: 'https://gondowangi.com',
+  },
+
+  ats: {
+    icon: '👥',
+    title: 'HR Recruitment Portal (ATS)',
+    headline: 'Mengakhiri Rekrutmen Berbasis Spreadsheet dan Berkas Fisik',
+    tagline: 'Proses rekrutmen tradisional di banyak perusahaan masih mengandalkan email masuk, spreadsheet tracking, dan tumpukan CV fisik. Sistem ATS ini mengdigitalisasi seluruh pipeline rekrutmen — dari saat HR membuka lowongan hingga keputusan akhir terhadap kandidat — dalam satu platform yang terstruktur, transparan, dan bisa diakses oleh semua pihak yang berwenang.',
+    context: [
+      { label: 'Tipe Sistem', val: 'Internal Applicant Tracking System' },
+      { label: 'Pengguna', val: 'Tim HR & Internal Applicants' },
+      { label: 'Status', val: '🔵 Internal System' },
+      { label: 'Akses', val: 'Private — Internal only' },
+    ],
+    features: [
+      { icon: '📋', title: 'Job Requisition Management', desc: 'HR membuat permintaan rekrutmen dengan detail posisi, kualifikasi, dan timeline. Setiap requisition memiliki lifecycle yang jelas dari draft hingga closed.' },
+      { icon: '🔍', title: 'CV Screening & Candidate Pipeline', desc: 'Kandidat masuk langsung ke pipeline digital. HR dapat memindahkan kandidat antar tahap (Screening → Interview → Offering → Hired/Rejected) dengan satu klik.' },
+      { icon: '⏱️', title: 'Real-Time Candidate Status Tracking', desc: 'Semua stakeholder yang berwenang dapat melihat posisi setiap kandidat secara real-time, mengurangi pertanyaan "gimana update kandidatnya?" yang membuang waktu.' },
+      { icon: '🔐', title: 'Strict Role-Based Access Control', desc: 'RBAC yang ketat memisahkan wewenang: tim HR memiliki akses penuh ke semua data kandidat, sementara kandidat internal hanya bisa melihat status lamaran mereka sendiri.' },
+      { icon: '📊', title: 'Recruitment Analytics', desc: 'Dashboard Time-to-Hire, sumber kandidat, dan conversion rate per tahap memberikan data yang dibutuhkan HR untuk terus meningkatkan efisiensi proses rekrutmen.' },
+    ],
+    metrics: [
+      { num: 'Faster', label: 'Time-to-Hire Process' },
+      { num: '0', label: 'Physical CV Documents' },
+      { num: 'RBAC', label: 'Strict Access Control' },
+    ],
+    tech: ['Laravel', 'Vue.js', 'Inertia.js', 'RBAC', 'SPA Architecture', 'MySQL'],
+    liveUrl: null,
+  },
+};
+
+/* ============ MODAL LOGIC ============ */
+const overlay = document.getElementById('projectModal');
+const modalBox = document.getElementById('modalBox');
+const mIcon = document.getElementById('mIcon');
+const mTitleSm = document.getElementById('mTitleSm');
+const mBody = document.getElementById('modalBody');
+const closeBtn = document.getElementById('modalClose');
+
+function openModal(key) {
+  const p = projects[key];
+  if (!p) return;
+
+  mIcon.textContent = p.icon;
+  mTitleSm.textContent = p.title;
+
+  const contextHTML = p.context.map(c => `
+    <div class="modal-context-card">
+      <div class="modal-context-label">${c.label}</div>
+      <div class="modal-context-val">${c.val}</div>
+    </div>
+  `).join('');
+
+  const featuresHTML = p.features.map(f => `
+    <div class="modal-feature">
+      <div class="modal-feature-icon">${f.icon}</div>
+      <div class="modal-feature-content">
+        <div class="modal-feature-title">${f.title}</div>
+        <div class="modal-feature-desc">${f.desc}</div>
+      </div>
+    </div>
+  `).join('');
+
+  const metricsHTML = p.metrics.map(m => `
+    <div class="modal-metric">
+      <div class="modal-metric-num">${m.num}</div>
+      <div class="modal-metric-label">${m.label}</div>
+    </div>
+  `).join('');
+
+  const techHTML = p.tech.map(t => `<span class="tech-badge">${t}</span>`).join('');
+
+  const ctaHTML = p.liveUrl
+    ? `<a href="${p.liveUrl}" target="_blank" class="modal-btn-live">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+        Buka Website
+      </a>`
+    : `<div class="modal-btn-internal">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Internal — Tidak dipublikasikan
+      </div>`;
+
+  mBody.innerHTML = `
+    <div class="modal-hero">
+      <h2 class="modal-headline">${p.headline}</h2>
+      <p class="modal-tagline">${p.tagline}</p>
+    </div>
+
+    <div class="modal-divider"></div>
+
+    <div class="modal-section-label">// context & scope</div>
+    <div class="modal-context-grid">${contextHTML}</div>
+
+    <div class="modal-divider"></div>
+
+    <div class="modal-section-label">// fitur & kapabilitas sistem</div>
+    <div class="modal-features">${featuresHTML}</div>
+
+    <div class="modal-divider"></div>
+
+    <div class="modal-section-label">// business impact</div>
+    <div class="modal-impact">${metricsHTML}</div>
+
+    <div class="modal-divider"></div>
+
+    <div class="modal-section-label">// tech stack</div>
+    <div class="modal-tech">${techHTML}</div>
+
+    <div class="modal-divider"></div>
+
+    <div class="modal-cta">${ctaHTML}</div>
+  `;
+
+  modalBox.scrollTop = 0;
+  overlay.classList.add('open');
+  document.body.classList.add('modal-open');
+}
+
+function closeModal() {
+  overlay.classList.remove('open');
+  document.body.classList.remove('modal-open');
+}
+
+closeBtn.addEventListener('click', closeModal);
+overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+document.querySelectorAll('.project-card[data-project]').forEach(card => {
+  card.addEventListener('click', () => openModal(card.dataset.project));
+});
+</script>
+</body>
+</html>
